@@ -1,4 +1,5 @@
-﻿namespace Ashod.Database
+﻿using System;
+namespace Ashod.Database
 {
 	public class CommandParameter
 	{
@@ -8,7 +9,10 @@
 		public CommandParameter(string name, object value)
 		{
 			Name = name;
-			Value = value;
+			if (value == null)
+				Value = DBNull.Value;
+			else
+				Value = value;
 		}
 	}
 }
