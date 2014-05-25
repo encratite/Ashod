@@ -39,6 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\CommandParameter.cs" />
+    <Compile Include="Database\DatabaseFactory.cs" />
+    <Compile Include="Database\DatabaseReader.cs" />
     <Compile Include="XmlFile.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ILogger.cs" />
