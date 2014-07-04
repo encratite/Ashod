@@ -2,8 +2,8 @@
 {
 	class CallMessage
 	{
-		public readonly int Id;
-		public readonly string Method;
-		public readonly object[] Arguments;
+		public int Id;
+		public string Method;
+		public object[] Arguments;
 	}
 }

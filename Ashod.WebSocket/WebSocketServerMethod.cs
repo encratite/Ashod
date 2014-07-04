@@ -2,7 +2,7 @@
 
 namespace Ashod.WebSocket
 {
-	public class ServerMethod : Attribute
+	public class WebSocketServerMethod : Attribute
 	{
 	}
 }
