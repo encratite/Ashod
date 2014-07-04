@@ -30,7 +30,7 @@ namespace Ashod.WebSocket
 			_Server.Start();
 		}
 
-		void IDisposable.Dispose()
+		public virtual void Dispose()
 		{
 			if (_Server != null)
 			{
