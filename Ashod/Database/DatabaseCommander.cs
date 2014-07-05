@@ -65,6 +65,30 @@ namespace Ashod.Database
 			return reader;
 		}
 
+		public ScalarType Scalar<ScalarType>(string commandText, params CommandParameter[] parameters)
+		{
+			using (var command = Command(commandText, parameters))
+			{
+				var scalar = command.ExecuteScalar();
+				if (scalar == DBNull.Value)
+					return default(ScalarType);
+				var output = (ScalarType)scalar;
+				return output;
+			}
+		}
+
+		public ScalarType ScalarFunction<ScalarType>(string function, params CommandParameter[] parameters)
+		{
+			using (var command = Function(function, false, parameters))
+			{
+				var scalar = command.ExecuteScalar();
+				if (scalar == DBNull.Value)
+					return default(ScalarType);
+				var output = (ScalarType)scalar;
+				return output;
+			}
+		}
+
 		public DbTransaction Transaction()
 		{
 			return _Connection.BeginTransaction();
