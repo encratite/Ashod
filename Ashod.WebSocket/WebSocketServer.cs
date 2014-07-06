@@ -136,7 +136,7 @@ namespace Ashod.WebSocket
 				messages.Add(exception.Message);
 				exception = exception.InnerException;
 			}
-			string output = string.Join(" ", messages.ToArray());
+			string output = exception.GetType() + ": " + string.Join(" ", messages.ToArray());
 			output = output.Replace("\r", "");
 			output = output.Replace("\n", " ");
 			return output;
