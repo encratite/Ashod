@@ -75,8 +75,7 @@ namespace Ashod.WebSocket
 			}
 			catch (Exception exception)
 			{
-				var result = ResultMessage.Exception(null, exception.Message);
-				SendMessage(session, result);
+				SendErrorResult(session, null, exception);
 			}
 		}
 
@@ -125,9 +124,29 @@ namespace Ashod.WebSocket
 			}
 			catch (Exception exception)
 			{
-				var result = ResultMessage.Exception(message.Id, exception.Message);
-				SendMessage(session, result);
+				SendErrorResult(session, message.Id, exception);
 			}
+		}
+
+		string GetFullExceptionMessage(Exception exception)
+		{
+			var messages = new List<string>();
+			while (exception != null)
+			{
+				messages.Add(exception.Message);
+				exception = exception.InnerException;
+			}
+			string output = string.Join(" ", messages.ToArray());
+			output = output.Replace("\r", "");
+			output = output.Replace("\n", " ");
+			return output;
+		}
+
+		void SendErrorResult(WebSocketSession session, int? id, Exception exception)
+		{
+			string message = GetFullExceptionMessage(exception);
+			var result = ResultMessage.Exception(id, message);
+			SendMessage(session, result);
 		}
 
 		void SendMessage(WebSocketSession session, ResultMessage message)
