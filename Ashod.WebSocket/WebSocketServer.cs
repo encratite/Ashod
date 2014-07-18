@@ -131,10 +131,13 @@ namespace Ashod.WebSocket
 		string GetFullExceptionMessage(Exception exception)
 		{
 			var messages = new List<string>();
-			while (exception != null)
+			while (true)
 			{
 				messages.Add(exception.Message);
-				exception = exception.InnerException;
+				var innerException = exception.InnerException;
+				if (innerException == null)
+					break;
+				exception = innerException;
 			}
 			string output = exception.GetType() + ": " + string.Join(" ", messages.ToArray());
 			output = output.Replace("\r", "");
