@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SuperSocket.SocketBase;
 using SuperWebSocket;
 using System;
@@ -155,8 +156,10 @@ namespace Ashod.WebSocket
 		void SendMessage(WebSocketSession session, ResultMessage message)
 		{
 			JsonSerializerSettings serialiserSettings = new JsonSerializerSettings();
+            var dateTimeConverter = new IsoDateTimeConverter();
 			serialiserSettings.ContractResolver = new JavaScriptContractResolver();
-			string messageText = JsonConvert.SerializeObject(message, serialiserSettings);
+            serialiserSettings.Converters.Add(dateTimeConverter);
+            string messageText = JsonConvert.SerializeObject(message, serialiserSettings);
 			session.Send(messageText);
 		}
 	}
