@@ -41,8 +41,7 @@ namespace Ashod.Database
 
 		public string GetString(string column)
 		{
-			int ordinal = _Reader.GetOrdinal(column);
-			return _Reader.GetString(ordinal);
+            return _Reader[column] as string;
 		}
 
 		public List<RowType> ReadAll<RowType>()
