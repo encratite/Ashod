@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace Ashod
 {
@@ -9,15 +9,21 @@ namespace Ashod
 
         public static void Write<SerializedType>(SerializedType input, string path = DefaultPath)
         {
-            string data = JsonConvert.SerializeObject(input);
-            File.WriteAllText(path, data);
+            using (var stream = new StreamWriter(path))
+            {
+                var serializer = new DataContractJsonSerializer(typeof(SerializedType));
+                serializer.WriteObject(stream.BaseStream, input);
+            }
         }
 
         public static SerializedType Read<SerializedType>(string path = DefaultPath)
         {
-            string data = File.ReadAllText(path);
-            var output = JsonConvert.DeserializeObject<SerializedType>(data);
-            return output;
+            using (var stream = new StreamReader(path))
+            {
+                var serializer = new DataContractJsonSerializer(typeof(SerializedType));
+                var output = (SerializedType)serializer.ReadObject(stream.BaseStream);
+                return output;
+            }
         }
     }
 }
