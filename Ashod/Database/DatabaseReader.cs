@@ -77,7 +77,7 @@ namespace Ashod.Database
 			return output;
 		}
 
-		string GetInternalName(string name)
+		private string GetInternalName(string name)
 		{
 			string output = name.Replace("_", "");
 			output = output.ToLower();

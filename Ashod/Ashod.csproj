@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\CommandParameter.cs" />
-    <Compile Include="Database\DatabaseCommander.cs" />
+    <Compile Include="Database\DatabaseConnection.cs" />
     <Compile Include="Database\DatabaseReader.cs" />
     <Compile Include="JsonFile.cs" />
     <Compile Include="XmlFile.cs" />

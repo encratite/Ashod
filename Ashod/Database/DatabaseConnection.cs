@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Ashod.Database
 {
-	public class DatabaseCommander : IDisposable
+	public class DatabaseConnection : IDisposable
 	{
 		private DbConnection _Connection;
 
-		public DatabaseCommander(DbConnection connection)
+		public DatabaseConnection(DbConnection connection)
 		{
 			_Connection = connection;
 			if (_Connection.State != ConnectionState.Open)
@@ -94,7 +94,7 @@ namespace Ashod.Database
 			return _Connection.BeginTransaction();
 		}
 
-		DbCommand Command(string commandText, params CommandParameter[] parameters)
+		private DbCommand Command(string commandText, params CommandParameter[] parameters)
 		{
 			var command = _Connection.CreateCommand();
 			command.CommandText = commandText;
@@ -108,7 +108,7 @@ namespace Ashod.Database
 			return command;
 		}
 
-		DbCommand Function(string function, bool isScalar, params CommandParameter[] parameters)
+        private DbCommand Function(string function, bool isScalar, params CommandParameter[] parameters)
 		{
 			var newParameters = parameters.Select(x => new CommandParameter("@" + x.Name, x.Value)).ToArray();
 			string parameterString = string.Join(", ", newParameters.Select(x => x.Name).ToArray());
