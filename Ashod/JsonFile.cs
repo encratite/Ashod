@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace Ashod
 {
@@ -18,12 +19,14 @@ namespace Ashod
 
         public static SerializedType Read<SerializedType>(string path = DefaultPath)
         {
-            using (var stream = new StreamReader(path))
-            {
-                var serializer = new DataContractJsonSerializer(typeof(SerializedType));
-                var output = (SerializedType)serializer.ReadObject(stream.BaseStream);
-                return output;
-            }
+			string content = File.ReadAllText(path);
+			var bytes = Encoding.UTF8.GetBytes(content);
+			using (var stream = new MemoryStream(bytes))
+			{
+				var serializer = new DataContractJsonSerializer(typeof(SerializedType));
+				var output = (SerializedType)serializer.ReadObject(stream);
+				return output;
+			}
         }
     }
 }
