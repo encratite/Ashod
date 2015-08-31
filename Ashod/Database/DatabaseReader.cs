@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Ashod.Database
@@ -9,11 +10,13 @@ namespace Ashod.Database
 	{
 		private DbCommand _Command;
 		private DbDataReader _Reader;
+        private IQueryPerformanceLogger _QueryPerformanceLogger;
 
-		public DatabaseReader(DbCommand command)
+		public DatabaseReader(DbCommand command, IQueryPerformanceLogger queryPerformanceLogger)
 		{
 			_Command = command;
 			_Reader = command.ExecuteReader();
+            _QueryPerformanceLogger = queryPerformanceLogger;
 		}
 
 		void IDisposable.Dispose()
@@ -47,6 +50,8 @@ namespace Ashod.Database
 		public List<RowType> ReadAll<RowType>()
 			where RowType : new()
 		{
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 			var output = new List<RowType>();
 			var propertyMap = new Dictionary<string, PropertyInfo>();
 			foreach (var propertyInfo in typeof(RowType).GetProperties())
@@ -74,6 +79,9 @@ namespace Ashod.Database
 				}
 				output.Add(row);
 			}
+            stopwatch.Stop();
+            if (_QueryPerformanceLogger != null)
+                _QueryPerformanceLogger.OnQueryEnd(_Command.CommandText, stopwatch.Elapsed);
 			return output;
 		}
 

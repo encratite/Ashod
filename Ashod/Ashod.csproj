@@ -43,6 +43,7 @@
     <Compile Include="Database\CommandParameter.cs" />
     <Compile Include="Database\DatabaseConnection.cs" />
     <Compile Include="Database\DatabaseReader.cs" />
+    <Compile Include="Database\IQueryPerformanceLogger.cs" />
     <Compile Include="JsonFile.cs" />
     <Compile Include="XmlFile.cs" />
     <Compile Include="ConsoleLogger.cs" />

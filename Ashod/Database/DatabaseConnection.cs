@@ -9,9 +9,12 @@ namespace Ashod.Database
 	{
 		private DbConnection _Connection;
 
-		public DatabaseConnection(DbConnection connection)
+        private IQueryPerformanceLogger _QueryPerformanceLogger;
+
+		public DatabaseConnection(DbConnection connection, IQueryPerformanceLogger queryPerformanceLogger = null)
 		{
 			_Connection = connection;
+            _QueryPerformanceLogger = queryPerformanceLogger;
 			if (_Connection.State != ConnectionState.Open)
 			{
 				try
@@ -54,14 +57,14 @@ namespace Ashod.Database
 		public DatabaseReader Read(string commandText, params CommandParameter[] parameters)
 		{
 			var command = Command(commandText, parameters);
-			var reader = new DatabaseReader(command);
+			var reader = new DatabaseReader(command, _QueryPerformanceLogger);
 			return reader;
 		}
 
 		public DatabaseReader ReadFunction(string function, params CommandParameter[] parameters)
 		{
 			var command = Function(function, false, parameters);
-			var reader = new DatabaseReader(command);
+			var reader = new DatabaseReader(command, _QueryPerformanceLogger);
 			return reader;
 		}
 
