@@ -15,8 +15,28 @@ namespace Ashod.Database
 		public DatabaseReader(DbCommand command, IQueryPerformanceLogger queryPerformanceLogger)
 		{
 			_Command = command;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 			_Reader = command.ExecuteReader();
+            stopwatch.Stop();
             _QueryPerformanceLogger = queryPerformanceLogger;
+            if (_QueryPerformanceLogger != null)
+            {
+                string text = _Command.CommandText;
+                foreach (DbParameter parameter in _Command.Parameters)
+                {
+                    string stringValue;
+                    var value = parameter.Value;
+                    if (value == null || value == DBNull.Value)
+                        stringValue = "null";
+                    else if(value is string || value is DateTime || value is DateTimeOffset)
+                        stringValue = string.Format("'{0}'", value.ToString().Replace("'", "''"));
+                    else
+                        stringValue = value.ToString();
+                    text = text.Replace(parameter.ParameterName, stringValue);
+                }
+                _QueryPerformanceLogger.OnQueryEnd(text, stopwatch.Elapsed);
+            }
 		}
 
 		void IDisposable.Dispose()
@@ -50,8 +70,6 @@ namespace Ashod.Database
 		public List<RowType> ReadAll<RowType>()
 			where RowType : new()
 		{
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
 			var output = new List<RowType>();
 			var propertyMap = new Dictionary<string, PropertyInfo>();
 			foreach (var propertyInfo in typeof(RowType).GetProperties())
@@ -79,9 +97,6 @@ namespace Ashod.Database
 				}
 				output.Add(row);
 			}
-            stopwatch.Stop();
-            if (_QueryPerformanceLogger != null)
-                _QueryPerformanceLogger.OnQueryEnd(_Command.CommandText, stopwatch.Elapsed);
 			return output;
 		}
 

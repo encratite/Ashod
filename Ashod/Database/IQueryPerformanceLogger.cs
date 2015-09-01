@@ -4,6 +4,6 @@ namespace Ashod.Database
 {
     public interface IQueryPerformanceLogger
     {
-        void OnQueryEnd(string commandText, TimeSpan timeSpan);
+        void OnQueryEnd(string query, TimeSpan timeSpan);
     }
 }
