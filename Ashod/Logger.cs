@@ -20,7 +20,8 @@ namespace Ashod
 			lock (_OutputLock)
 			{
 				string message = string.Format(formatString, arguments);
-				Handler.Write(message, level);
+                string finalMessage = string.Format("{0} {1}", DateTime.Now, message);
+				Handler.Write(finalMessage, level);
 			}
 		}
 
